@@ -128,6 +128,20 @@ public class Server {
     }
 
     /**
+     * Gets the extension of a string filename
+     * @param path the filename to get extension from
+     * @return extension of filename if it has one, otherwise null
+     */
+    public static String getExtension(String path){
+        if(path.lastIndexOf(".")!=-1){
+            return path.substring(path.lastIndexOf(".")+1);
+        }
+        else{
+            return null;
+        }
+    }
+
+    /**
      * does the compiling, executing, and testing for the c file that is sent by the client, also saves a report on the system
      * @param testcase
      * @param filename
@@ -141,7 +155,8 @@ public class Server {
         String line = br.readLine();
         ArrayList<ArrayList<String>> inputgroups = new ArrayList<>();
         ArrayList<String> outputs = new ArrayList<>();
-        String fileNameWithoutExt = filename.substring(0, filename.length()-2);
+        String fileNameWithoutExt = filename.substring(0, filename.lastIndexOf(".")-1);
+        String fileExt = getExtension(filename);
 
         //--------------------loading all data from testcase file into arraylists to be used for testing later-----------
         while(line!=null){
@@ -161,7 +176,16 @@ public class Server {
         }
 
         //---------------------compiling c file--------------------------------------------------
-        Process p = Runtime.getRuntime().exec("gcc "+studentName+"/"+filename+" -o "+fileNameWithoutExt); //run file
+        if(fileExt.equals("c")){ //c file
+        	Process p = Runtime.getRuntime().exec("gcc "+studentName+"/"+filename+" -o "+fileNameWithoutExt); //run file
+        }
+        else if(fileExt.equals("java")){ //java file
+        	Process p = Runtime.getRuntime().exec("java "+studentName+"/"+filename); //run file
+        }
+        else{
+        	System.out.println("Invalid file sent, file must be a C or Java file.");
+        	System.exit(0);
+        }
         String report = "";
 
         //---------------checking if there were no errors with compilation----------------------------------------
