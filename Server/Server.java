@@ -157,7 +157,8 @@ public class Server {
         ArrayList<String> outputs = new ArrayList<>();
         String fileNameWithoutExt = filename.substring(0, filename.lastIndexOf(".")-1);
         String fileExt = getExtension(filename);
-
+        Process p = null;
+        
         //--------------------loading all data from testcase file into arraylists to be used for testing later-----------
         while(line!=null){
             while(!line.equals("#")){ //if input group and output group didnt end ended
@@ -177,10 +178,10 @@ public class Server {
 
         //---------------------compiling c file--------------------------------------------------
         if(fileExt.equals("c")){ //c file
-        	Process p = Runtime.getRuntime().exec("gcc "+studentName+"/"+filename+" -o "+fileNameWithoutExt); //run file
+        	p = Runtime.getRuntime().exec("gcc "+studentName+"/"+filename+" -o "+fileNameWithoutExt); //run file
         }
         else if(fileExt.equals("java")){ //java file
-        	Process p = Runtime.getRuntime().exec("java "+studentName+"/"+filename); //run file
+        	p = Runtime.getRuntime().exec("java "+studentName+"/"+filename); //run file
         }
         else{
         	System.out.println("Invalid file sent, file must be a C or Java file.");
